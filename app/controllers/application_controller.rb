@@ -5,6 +5,6 @@ class ApplicationController < ActionController::Base
 
   def index
     puts 'test'
-    render text: "Hello World"
+    render text: "HELLLOOOOOOOOOOOOOOOOOOOO"
   end
 end
