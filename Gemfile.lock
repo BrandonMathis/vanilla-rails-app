@@ -122,7 +122,6 @@ DEPENDENCIES
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
   spring
-  tape!
   turbolinks
   uglifier (>= 1.3.0)
   unicorn
