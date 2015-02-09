@@ -11,4 +11,6 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 gem 'unicorn'
 
-gem 'tape', path: '~/Dev/Ruby/tape', group: :development
+group :development do
+  gem 'tape', path: '~/Dev/Ruby/tape'
+end

@@ -1,8 +1,3 @@
-PATH
-  remote: ~/Dev/Ruby/tape
-  specs:
-    tape (0.1.5)
-
 GEM
   remote: https://rubygems.org/
   specs:
