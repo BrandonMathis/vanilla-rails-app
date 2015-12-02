@@ -1,0 +1,48 @@
+# the IP(s) on which your node server is running. I chose port 3000.
+upstream railsapp {
+  server 127.0.0.1:3000;
+}
+
+# the nginx server instance
+server {
+    listen 0.0.0.0:80;
+    server_name localapp;
+    access_log /var/log/nginx/railsapp.log;
+
+    # GZIP ANYONE?
+    # gzip on;
+    # gzip_comp_level 6;
+    # gzip_vary on;
+    # gzip_min_length  1000;
+    # gzip_proxied any;
+    # gzip_types text/plain text/html text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+    # gzip_buffers 16 8k;
+    # gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+
+    access_log /railsapp/log/nginx_access.log;
+    error_log  /railsapp/log/nginx_error.log;
+    root     /railsapp/public;
+    index    index.html;
+
+    location / {
+      proxy_set_header   X-Real-IP         $remote_addr;
+      proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header   X-Forwarded-Proto $scheme;
+      proxy_set_header   Host              $http_host;
+      proxy_set_header   X-NginX-Proxy     true;
+
+      proxy_redirect  off;
+
+      proxy_temp_path /var/tmp;
+      proxy_cache_key sfs$request_uri$scheme;
+
+      proxy_intercept_errors on;
+      error_page 404 500 502 503 504 error.html;
+
+      try_files /system/maintenance.html $uri $uri/index.html $uri.html @rails;
+    }
+
+    location @rails {
+      proxy_pass http://railsapp;
+    }
+}

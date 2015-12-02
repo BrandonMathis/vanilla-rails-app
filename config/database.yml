@@ -1,0 +1,17 @@
+development:
+  adapter: postgresql
+  hostname: localhost:15432
+  encoding: unicode
+  database: railsapp_development
+  pool: 5
+  username: vagrant
+  password: dbpass
+
+test:
+  adapter: postgresql
+  hostname: localhost:15432
+  encoding: unicode
+  database: railsapp_test
+  pool: 5
+  username: vagrant
+  password: dbpass
