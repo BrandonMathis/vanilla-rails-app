@@ -1,0 +1,35 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+	repo_folder_path = File.basename(File.expand_path('..'))
+	#puts "\n\n\n\n\nHello!"+repo_folder_path+"\n\n\n\n\n"
+
+	# Using Ubuntu Trusty (14.04) for now
+	config.vm.box = "ubuntu/trusty64"
+
+	# Give Box it's own IP
+	config.vm.network "private_network", ip: "192.168.111.111"
+	
+	# Would you rather use port forwarding? comment out that last line and add these:
+	# config.vm.network :forwarded_port, guest: 80, host: 8888 
+	config.vm.network :forwarded_port, guest: 3000, host: 3000 #common port for rails, etc
+
+	# Sync parent folder.
+	# Using NFS. Will require your admin password on 'vagrant up' 
+	# If you can't use NFS, then you'll have to remove the last two params.
+	# Seriously consider using NFS -- you can have performance issues in the rails asset pipeline, if you don't.
+	config.vm.synced_folder "../", "/home/vagrant/"+repo_folder_path, :nfs => true, :mount_options => ['actimeo=2']
+
+	# EDIT THE SCRIPT REFERENCED BELOW TO 
+	config.vm.provision "shell", path: "setup.sh", privileged: false, args: repo_folder_path
+
+	config.vm.provider "virtualbox" do |v|
+		#VM inherits the name of the parent folder. 
+		#If you've got multiple apps with the parent folder name, you can change this to avoid conflicts.
+		v.name = "VDK-" + repo_folder_path
+		
+		v.memory = 1024 # 512 is standard, but it's too tight. I've boosted this.
+		v.cpus = 2 # Add extra CPU. CPUs are good schedulers, so don't worry about the box eating an entire cpu.
+	end	
+end
